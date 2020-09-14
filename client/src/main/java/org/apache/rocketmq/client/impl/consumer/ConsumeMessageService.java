@@ -21,6 +21,9 @@ import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.common.message.MessageQueue;
 import org.apache.rocketmq.common.protocol.body.ConsumeMessageDirectlyResult;
 
+/**
+ * 消息消费服务
+ */
 public interface ConsumeMessageService {
     void start();
 

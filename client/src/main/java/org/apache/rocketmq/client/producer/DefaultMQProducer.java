@@ -63,8 +63,8 @@ public class DefaultMQProducer extends ClientConfig implements MQProducer {
     protected final transient DefaultMQProducerImpl defaultMQProducerImpl;
     private final InternalLogger log = ClientLogger.getLog();
     /**
-     * Producer group conceptually aggregates all producer instances of exactly same role, which is particularly
-     * important when transactional messages are involved. </p>
+     *
+     * 生产者组通常聚合多个相关角色的生产者实例，当牵涉到事务消息时这个尤其重要
      *
      * For non-transactional messages, it does not matter as long as it's unique per process. </p>
      *
@@ -78,41 +78,39 @@ public class DefaultMQProducer extends ClientConfig implements MQProducer {
     private String createTopicKey = TopicValidator.AUTO_CREATE_TOPIC_KEY_TOPIC;
 
     /**
-     * Number of queues to create per default topic.
+     * 默认Topic的队列数量为4
      */
     private volatile int defaultTopicQueueNums = 4;
 
     /**
-     * Timeout for sending messages.
+     * 发送消息超时时间，3s
      */
     private int sendMsgTimeout = 3000;
 
     /**
-     * Compress message body threshold, namely, message body larger than 4k will be compressed on default.
+     * 超过4K的消息体将会采用压缩算法
      */
     private int compressMsgBodyOverHowmuch = 1024 * 4;
 
     /**
-     * Maximum number of retry to perform internally before claiming sending failure in synchronous mode. </p>
      *
-     * This may potentially cause message duplication which is up to application developers to resolve.
+     * 尝试2次以后将会重发消息.这可能会造成重复消费
      */
     private int retryTimesWhenSendFailed = 2;
 
     /**
-     * Maximum number of retry to perform internally before claiming sending failure in asynchronous mode. </p>
      *
-     * This may potentially cause message duplication which is up to application developers to resolve.
+     * 尝试2次Async以后会进行重发,这可能会造成重复消费
      */
     private int retryTimesWhenSendAsyncFailed = 2;
 
     /**
-     * Indicate whether to retry another broker on sending failure internally.
+     * 存储失败时是否尝试发送到其他Broker上
      */
     private boolean retryAnotherBrokerWhenNotStoreOK = false;
 
     /**
-     * Maximum allowed message size in bytes.
+     * 最大消息大小
      */
     private int maxMessageSize = 1024 * 1024 * 4; // 4M
 
@@ -122,7 +120,7 @@ public class DefaultMQProducer extends ClientConfig implements MQProducer {
     private TraceDispatcher traceDispatcher = null;
 
     /**
-     * Default constructor.
+     * 默认构造器
      */
     public DefaultMQProducer() {
         this(null, MixAll.DEFAULT_PRODUCER_GROUP, null);
@@ -195,6 +193,7 @@ public class DefaultMQProducer extends ClientConfig implements MQProducer {
 
     /**
      * Constructor specifying namespace, producer group and RPC hook.
+     * // TODO RPC Hook 是干什么用的?
      *
      * @param namespace Namespace for this MQ Producer instance.
      * @param producerGroup Producer group, see the name-sake field.
@@ -303,11 +302,9 @@ public class DefaultMQProducer extends ClientConfig implements MQProducer {
     }
 
     /**
-     * Send message in synchronous mode. This method returns only when the sending procedure totally completes. </p>
+     * 同步发送消息. 当消息完整发送时才返回
      *
-     * <strong>Warn:</strong> this method has internal retry-mechanism, that is, internal implementation will retry
-     * {@link #retryTimesWhenSendFailed} times before claiming failure. As a result, multiple messages may potentially
-     * delivered to broker(s). It's up to the application developers to resolve potential duplication issue.
+     * 警告: 这个方法自带重试机制. 它会抛出失败前重试 {@link #retryTimesWhenSendFailed} 次数.
      *
      * @param msg Message to send.
      * @return {@link SendResult} instance to inform senders details of the deliverable, say Message ID of the message,
@@ -320,6 +317,7 @@ public class DefaultMQProducer extends ClientConfig implements MQProducer {
     @Override
     public SendResult send(
         Message msg) throws MQClientException, RemotingException, MQBrokerException, InterruptedException {
+        // 校验消息的正确性
         Validators.checkMessage(msg, this);
         msg.setTopic(withNamespace(msg.getTopic()));
         return this.defaultMQProducerImpl.send(msg);

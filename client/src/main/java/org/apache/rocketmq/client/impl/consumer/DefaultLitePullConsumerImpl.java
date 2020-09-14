@@ -122,6 +122,9 @@ public class DefaultLitePullConsumerImpl implements MQConsumerInner {
 
     private AssignedMessageQueue assignedMessageQueue = new AssignedMessageQueue();
 
+    /**
+     * 阻塞队列
+     */
     private final BlockingQueue<ConsumeRequest> consumeRequestCache = new LinkedBlockingQueue<ConsumeRequest>();
 
     private ScheduledThreadPoolExecutor scheduledThreadPoolExecutor;
@@ -491,6 +494,11 @@ public class DefaultLitePullConsumerImpl implements MQConsumerInner {
         }
     }
 
+    /**
+     * 核心消息拉取
+     * @param timeout
+     * @return
+     */
     public synchronized List<MessageExt> poll(long timeout) {
         try {
             checkServiceState();
@@ -502,6 +510,7 @@ public class DefaultLitePullConsumerImpl implements MQConsumerInner {
             }
             long endTime = System.currentTimeMillis() + timeout;
 
+            // 获取并移除队头元素
             ConsumeRequest consumeRequest = consumeRequestCache.poll(endTime - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
 
             if (endTime - System.currentTimeMillis() > 0) {

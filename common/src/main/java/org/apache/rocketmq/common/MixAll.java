@@ -48,6 +48,7 @@ public class MixAll {
     public static final String ROCKETMQ_HOME_ENV = "ROCKETMQ_HOME";
     public static final String ROCKETMQ_HOME_PROPERTY = "rocketmq.home.dir";
     public static final String NAMESRV_ADDR_ENV = "NAMESRV_ADDR";
+    // 服务端地址配置
     public static final String NAMESRV_ADDR_PROPERTY = "rocketmq.namesrv.addr";
     public static final String MESSAGE_COMPRESS_LEVEL = "rocketmq.message.compressLevel";
     public static final String DEFAULT_NAMESRV_ADDR_LOOKUP = "jmenv.tbsite.net";

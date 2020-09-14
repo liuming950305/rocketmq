@@ -42,15 +42,24 @@ import org.apache.rocketmq.srvutil.FileWatchService;
 public class NamesrvController {
     private static final InternalLogger log = InternalLoggerFactory.getLogger(LoggerName.NAMESRV_LOGGER_NAME);
 
+    /**
+     * NameServer 配置[配置文件路径等内容]
+     */
     private final NamesrvConfig namesrvConfig;
-
+    /**
+     * NetteyServer参数配置
+     */
     private final NettyServerConfig nettyServerConfig;
 
+    // 线程池
     private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryImpl(
         "NSScheduledThread"));
+    // KV管理器
     private final KVConfigManager kvConfigManager;
+    // 路由信息管理
     private final RouteInfoManager routeInfoManager;
 
+    // 远程服务器信息
     private RemotingServer remotingServer;
 
     private BrokerHousekeepingService brokerHousekeepingService;
@@ -77,11 +86,13 @@ public class NamesrvController {
 
         this.kvConfigManager.load();
 
+        // 初始化并启动RemotingServer. 启动Netty线程组
         this.remotingServer = new NettyRemotingServer(this.nettyServerConfig, this.brokerHousekeepingService);
 
         this.remotingExecutor =
             Executors.newFixedThreadPool(nettyServerConfig.getServerWorkerThreads(), new ThreadFactoryImpl("RemotingExecutorThread_"));
 
+        // 注册线程池
         this.registerProcessor();
 
         this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
@@ -101,7 +112,7 @@ public class NamesrvController {
         }, 1, 10, TimeUnit.MINUTES);
 
         if (TlsSystemConfig.tlsMode != TlsMode.DISABLED) {
-            // Register a listener to reload SslContext
+            // 注册SSLContext监听器
             try {
                 fileWatchService = new FileWatchService(
                     new String[] {
@@ -161,6 +172,8 @@ public class NamesrvController {
     }
 
     public void shutdown() {
+
+        log.info("fucked. I'll shutdown now.");
         this.remotingServer.shutdown();
         this.remotingExecutor.shutdown();
         this.scheduledExecutorService.shutdown();

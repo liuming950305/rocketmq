@@ -231,15 +231,23 @@ public class MQClientInstance {
                     if (null == this.clientConfig.getNamesrvAddr()) {
                         this.mQClientAPIImpl.fetchNameServerAddr();
                     }
-                    // Start request-response channel
+                    // 开启请求/相应channel
                     this.mQClientAPIImpl.start();
-                    // Start various schedule tasks
+                    /**
+                     * 开启各种调度任务
+                     * 1. 获取到NameServer信息
+                     * 2. 更新Topic的路由信息
+                     * 3. 清除下线的Broker
+                     * 4. 发送心跳给Producer和Consumer
+                     * 5. 持久化Consumer消费的偏移量
+                     * 6. 动态调整线程池大小
+                     */
                     this.startScheduledTask();
-                    // Start pull service
+                    // 开启拉取消息服务
                     this.pullMessageService.start();
-                    // Start rebalance service
+                    // TODO 开启rebalance服务
                     this.rebalanceService.start();
-                    // Start push service
+                    // 开启推消息服务
                     this.defaultMQProducer.getDefaultMQProducerImpl().start(false);
                     log.info("the client factory [{}] start OK", this.clientId);
                     this.serviceState = ServiceState.RUNNING;
@@ -605,10 +613,12 @@ public class MQClientInstance {
     public boolean updateTopicRouteInfoFromNameServer(final String topic, boolean isDefault,
         DefaultMQProducer defaultMQProducer) {
         try {
+            // 上锁一段时间
             if (this.lockNamesrv.tryLock(LOCK_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)) {
                 try {
                     TopicRouteData topicRouteData;
                     if (isDefault && defaultMQProducer != null) {
+                        // 向远程客户端获取Topic相关信息. 检查Topic是否存在
                         topicRouteData = this.mQClientAPIImpl.getDefaultTopicRouteInfoFromNameServer(defaultMQProducer.getCreateTopicKey(),
                             1000 * 3);
                         if (topicRouteData != null) {
@@ -619,6 +629,7 @@ public class MQClientInstance {
                             }
                         }
                     } else {
+                        // 向远程客户端获取Topic相关信息. 检查Topic是否存在
                         topicRouteData = this.mQClientAPIImpl.getTopicRouteInfoFromNameServer(topic, 1000 * 3);
                     }
                     if (topicRouteData != null) {

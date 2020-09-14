@@ -46,7 +46,7 @@ import org.apache.rocketmq.store.ha.HAService;
 import org.apache.rocketmq.store.schedule.ScheduleMessageService;
 
 /**
- * Store all metadata downtime for recovery, data protection reliability
+ * 存储所有的元数据用于down机时的回复. 确保数据的可靠性
  */
 public class CommitLog {
     // Message's MAGIC CODE daa320a7
@@ -56,6 +56,9 @@ public class CommitLog {
     protected final static int BLANK_MAGIC_CODE = -875286124;
     protected final MappedFileQueue mappedFileQueue;
     protected final DefaultMessageStore defaultMessageStore;
+    /**
+     * 刷盘服务
+     */
     private final FlushCommitLogService flushCommitLogService;
 
     //If TransientStorePool enabled, we must flush message to FileChannel at fixed periods

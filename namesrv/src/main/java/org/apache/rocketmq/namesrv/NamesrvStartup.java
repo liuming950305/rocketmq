@@ -54,6 +54,7 @@ public class NamesrvStartup {
     public static NamesrvController main0(String[] args) {
 
         try {
+            // 装配参数到NameServer控制器中
             NamesrvController controller = createNamesrvController(args);
             start(controller);
             String tip = "The Name Server boot success. serializeType=" + RemotingCommand.getSerializeTypeConfigInThisServer();
@@ -81,7 +82,12 @@ public class NamesrvStartup {
 
         final NamesrvConfig namesrvConfig = new NamesrvConfig();
         final NettyServerConfig nettyServerConfig = new NettyServerConfig();
+        // 设置端口
         nettyServerConfig.setListenPort(9876);
+
+        /**
+         * -c 指定参数配置
+         */
         if (commandLine.hasOption('c')) {
             String file = commandLine.getOptionValue('c');
             if (file != null) {
@@ -98,6 +104,9 @@ public class NamesrvStartup {
             }
         }
 
+        /**
+         *  -p key value 属性名称与属性值
+         */
         if (commandLine.hasOption('p')) {
             InternalLogger console = InternalLoggerFactory.getLogger(LoggerName.NAMESRV_CONSOLE_NAME);
             MixAll.printObjectProperties(console, namesrvConfig);
@@ -108,8 +117,9 @@ public class NamesrvStartup {
         MixAll.properties2Object(ServerUtil.commandLine2Properties(commandLine), namesrvConfig);
 
         if (null == namesrvConfig.getRocketmqHome()) {
+            /* 为了让NameServer启动直接把代码注释
             System.out.printf("Please set the %s variable in your environment to match the location of the RocketMQ installation%n", MixAll.ROCKETMQ_HOME_ENV);
-            System.exit(-2);
+            System.exit(-2);*/
         }
 
         LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
@@ -123,9 +133,10 @@ public class NamesrvStartup {
         MixAll.printObjectProperties(log, namesrvConfig);
         MixAll.printObjectProperties(log, nettyServerConfig);
 
+        // 创建Namesvc控制器
         final NamesrvController controller = new NamesrvController(namesrvConfig, nettyServerConfig);
 
-        // remember all configs to prevent discard
+        // 记住配置文件的内容防止丢失
         controller.getConfiguration().registerConfig(properties);
 
         return controller;
@@ -137,6 +148,9 @@ public class NamesrvStartup {
             throw new IllegalArgumentException("NamesrvController is null");
         }
 
+        /**
+         * 初始化控制器
+         */
         boolean initResult = controller.initialize();
         if (!initResult) {
             controller.shutdown();

@@ -37,6 +37,7 @@ public class DefaultLitePullConsumer extends ClientConfig implements LitePullCon
     private final DefaultLitePullConsumerImpl defaultLitePullConsumerImpl;
 
     /**
+     * 同个消费组下的消费者共享一个group id, 消费组中的消费者将topic尽可能划分为每一个消费者消费一个队列
      * Consumers belonging to the same consumer group share a group id. The consumers in a group then divides the topic
      * as fairly amongst themselves as possible by establishing that each queue is only consumed by a single consumer
      * from the group. If all consumers are from the same group, it functions as a traditional message queue. Each

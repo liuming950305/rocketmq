@@ -36,6 +36,7 @@ public class MQClientManager {
 
     }
 
+    // 此处使用单例模式.
     public static MQClientManager getInstance() {
         return instance;
     }
@@ -48,6 +49,7 @@ public class MQClientManager {
         String clientId = clientConfig.buildMQClientId();
         MQClientInstance instance = this.factoryTable.get(clientId);
         if (null == instance) {
+            // 构造出MQ客户端实例
             instance =
                 new MQClientInstance(clientConfig.cloneClientConfig(),
                     this.factoryIndexGenerator.getAndIncrement(), clientId, rpcHook);

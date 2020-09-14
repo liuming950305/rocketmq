@@ -17,28 +17,60 @@
 
 package org.apache.rocketmq.common.protocol;
 
+/**
+ * 与远程Remoting Server进行交互的命令
+ */
 public class RequestCode {
 
+    /**
+     * 发送消息
+     */
     public static final int SEND_MESSAGE = 10;
 
+    /**
+     * 拉取消息
+     */
     public static final int PULL_MESSAGE = 11;
 
+    /**
+     * 查询消息
+     */
     public static final int QUERY_MESSAGE = 12;
     public static final int QUERY_BROKER_OFFSET = 13;
+    /**
+     * 查询消费偏移量
+     */
     public static final int QUERY_CONSUMER_OFFSET = 14;
+    /**
+     * 更新消费偏移量
+     */
     public static final int UPDATE_CONSUMER_OFFSET = 15;
+    /**
+     * 更新或者创建Topic
+     */
     public static final int UPDATE_AND_CREATE_TOPIC = 17;
+    /**
+     * 获取所有的Topic 配置信息
+     */
     public static final int GET_ALL_TOPIC_CONFIG = 21;
     public static final int GET_TOPIC_CONFIG_LIST = 22;
 
     public static final int GET_TOPIC_NAME_LIST = 23;
 
+    /**
+     * 更新Broker的配置
+     */
     public static final int UPDATE_BROKER_CONFIG = 25;
 
+    /**
+     * 获取Broker配置
+     */
     public static final int GET_BROKER_CONFIG = 26;
 
     public static final int TRIGGER_DELETE_FILES = 27;
-
+    /**
+     * 获取Broker运行时的信息
+     */
     public static final int GET_BROKER_RUNTIME_INFO = 28;
     public static final int SEARCH_OFFSET_BY_TIMESTAMP = 29;
     public static final int GET_MAX_OFFSET = 30;
@@ -89,6 +121,9 @@ public class RequestCode {
     public static final int REGISTER_BROKER = 103;
 
     public static final int UNREGISTER_BROKER = 104;
+    /**
+     * 通过Topic获取路由信息
+     */
     public static final int GET_ROUTEINFO_BY_TOPIC = 105;
 
     public static final int GET_BROKER_CLUSTER_INFO = 106;

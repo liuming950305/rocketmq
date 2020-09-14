@@ -232,6 +232,7 @@ public class DefaultMessageStore implements MessageStore {
         {
             /**
              * 1. Make sure the fast-forward messages to be truncated during the recovering according to the max physical offset of the commitlog;
+             * 1. 确保在恢复过程中根据提交日志的最大物理偏移量将快进消息截断；
              * 2. DLedger committedPos may be missing, so the maxPhysicalPosInLogicQueue maybe bigger that maxOffset returned by DLedgerCommitLog, just let it go;
              * 3. Calculate the reput offset according to the consume queue;
              * 4. Make sure the fall-behind messages to be dispatched before starting the commitlog, especially when the broker role are automatically changed.
@@ -1580,6 +1581,9 @@ public class DefaultMessageStore implements MessageStore {
         }
     }
 
+    /**
+     * 清除commit log 服务
+     */
     class CleanCommitLogService {
 
         private final static int MAX_MANUAL_DELETE_FILE_TIMES = 20;
@@ -1762,6 +1766,9 @@ public class DefaultMessageStore implements MessageStore {
         }
     }
 
+    /**
+     * 清除消费者服务
+     */
     class CleanConsumeQueueService {
         private long lastPhysicalMinOffset = 0;
 
@@ -1819,8 +1826,10 @@ public class DefaultMessageStore implements MessageStore {
 
             int flushConsumeQueueThoroughInterval = DefaultMessageStore.this.getMessageStoreConfig().getFlushConsumeQueueThoroughInterval();
             long currentTimeMillis = System.currentTimeMillis();
+            // 如果当前时间 >= 上次刷盘时间 + 间隔四件
             if (currentTimeMillis >= (this.lastFlushTimestamp + flushConsumeQueueThoroughInterval)) {
                 this.lastFlushTimestamp = currentTimeMillis;
+                // 重置 flushConsumeQueueLeastPages 参数
                 flushConsumeQueueLeastPages = 0;
                 logicsMsgTimestamp = DefaultMessageStore.this.getStoreCheckpoint().getLogicsMsgTimestamp();
             }
@@ -1831,6 +1840,7 @@ public class DefaultMessageStore implements MessageStore {
                 for (ConsumeQueue cq : maps.values()) {
                     boolean result = false;
                     for (int i = 0; i < retryTimes && !result; i++) {
+                        // 开始刷盘. 底层最终使用NIO的MapperBuffer进行文件写入
                         result = cq.flush(flushConsumeQueueLeastPages);
                     }
                 }

@@ -21,7 +21,7 @@ import org.apache.rocketmq.client.exception.MQClientException;
 import java.io.IOException;
 
 /**
- * Interface of asynchronous transfer data
+ * 异步参数数据接口
  */
 public interface TraceDispatcher {
     enum Type {

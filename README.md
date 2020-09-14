@@ -10,27 +10,27 @@
 
 **[Apache RocketMQ](https://rocketmq.apache.org) is a distributed messaging and streaming platform with low latency, high performance and reliability, trillion-level capacity and flexible scalability.**
 
-It offers a variety of features:
+提供如下特性:
 
-* Messageing patterns including publish/subscribe, request/reply and streaming
-* Financial grade transactional message
-* Built-in fault tolerance and high availability configuration options base on [DLedger](https://github.com/openmessaging/openmessaging-storage-dledger)
-* A variety of cross language clients, such as Java, C/C++, Python, Go
-* Pluggable transport protocols, such as TCP, SSL, AIO
-* Built-in message tracing capability, also support opentracing
-* Versatile big-data and streaming ecosytem integration
-* Message retroactivity by time or offset
-* Reliable FIFO and strict ordered messaging in the same queue
-* Efficient pull and push consumption model
-* Million-level message accumulation capacity in a single queue
-* Multiple messaging protocols like JMS and OpenMessaging
-* Flexible distributed scale-out deployment architecture
-* Lightning-fast batch message exchange system
-* Various message filter mechanics such as SQL and Tag
-* Docker images for isolated testing and cloud isolated clusters
-* Feature-rich administrative dashboard for configuration, metrics and monitoring
-* Authentication and authorization
-* Free open source connectors, for both sources and sinks
+* 消息模式 包括 发布/订阅，请求相应和流模型
+* 金融级事务消息
+* 基于[DLedger](https://github.com/openmessaging/openmessaging-storage-dledger)内置容错和高可用配置选项
+* 丰富的跨语言客户端，如Java, C/C++, Python, Go
+* 可拔插的传输层协议，如TCP，SSL，AIO
+* 内置消息跟踪功能，还支持开放式跟踪
+* 多功能的大数据和流生态系统集成
+* 按时间或者偏移量追索消息
+* 同队列中可靠的先进先出和消息顺序性保证
+* 高效的推拉消费模型
+* 单队列中百万级消息堆积容量
+* 多消息协议支持如JSM和OpenMessaging
+* 灵活的分布式扩容部署架构
+* 快如闪电的批量消息交换系统
+* 各种消息过滤机制如SQL和Tag
+* 用于隔离测试和云隔离群集的Docker镜像
+* 功能丰富的后台管理界面用于配置，图表和监控
+* 认证授权
+* 免费的开源连接器，适用于源和接收器
 
 ----------
 

@@ -24,7 +24,7 @@ import org.apache.rocketmq.logging.InternalLogger;
 import org.apache.rocketmq.common.message.MessageQueue;
 
 /**
- * Average Hashing queue algorithm
+ * 平均分配策略
  */
 public class AllocateMessageQueueAveragely implements AllocateMessageQueueStrategy {
     private final InternalLogger log = ClientLogger.getLog();
@@ -51,11 +51,22 @@ public class AllocateMessageQueueAveragely implements AllocateMessageQueueStrate
             return result;
         }
 
+        // 找到当前消费者在消费组中的下标
         int index = cidAll.indexOf(currentCID);
+        // 消息总数 % 消息数量 查看是否能够均分给所有的消费者
         int mod = mqAll.size() % cidAll.size();
         int averageSize =
-            mqAll.size() <= cidAll.size() ? 1 : (mod > 0 && index < mod ? mqAll.size() / cidAll.size()
+                // 消息数量小于 消费者数量. 有足够的消费者去消费消息.
+            mqAll.size() <= cidAll.size() ? 1 :
+                    // mod > 0说明不能完全平分. 并且当前消费者在前半部分,能够消费消息. 批大小 消息数量 / 消费者数量 + 1.
+                    (mod > 0 && index < mod ? mqAll.size() / cidAll.size()
                 + 1 : mqAll.size() / cidAll.size());
+
+        /**
+         * 举例: 3个消费者. 共计10条消息, CID 为2
+         * mod = 10 % 3 = 1
+         * averageSize = 3
+         */
         int startIndex = (mod > 0 && index < mod) ? index * averageSize : index * averageSize + mod;
         int range = Math.min(averageSize, mqAll.size() - startIndex);
         for (int i = 0; i < range; i++) {

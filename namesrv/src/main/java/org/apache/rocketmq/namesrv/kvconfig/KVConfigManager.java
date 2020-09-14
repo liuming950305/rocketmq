@@ -28,6 +28,14 @@ import org.apache.rocketmq.logging.InternalLogger;
 import org.apache.rocketmq.logging.InternalLoggerFactory;
 import org.apache.rocketmq.common.protocol.body.KVTable;
 import org.apache.rocketmq.namesrv.NamesrvController;
+
+/**
+ * KV 配置管理
+ * 1. 加载kv
+ * 2. put值到kv中
+ * 3. 删除kv值
+ * 4. 持久化数据到kv中
+ */
 public class KVConfigManager {
     private static final InternalLogger log = InternalLoggerFactory.getLogger(LoggerName.NAMESRV_LOGGER_NAME);
 

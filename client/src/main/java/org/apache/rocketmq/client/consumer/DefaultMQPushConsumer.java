@@ -46,11 +46,12 @@ import org.apache.rocketmq.remoting.RPCHook;
 import org.apache.rocketmq.remoting.exception.RemotingException;
 
 /**
- * In most scenarios, this is the mostly recommended class to consume messages.
+ * 大多数场景下. 这是常见的消息消费模型
  * </p>
  *
  * Technically speaking, this push client is virtually a wrapper of the underlying pull service. Specifically, on
  * arrival of messages pulled from brokers, it roughly invokes the registered callback handler to feed the messages.
+ * 从技术层面来说. Push模式客户端是一个基于Pull 服务的虚拟包装.具体来说. 当消息发布到brokers时，它就会把消息推送到已经注册的回调Hanler上
  * </p>
  *
  * See quickstart/Consumer in the example module for a typical usage.
@@ -66,6 +67,7 @@ public class DefaultMQPushConsumer extends ClientConfig implements MQPushConsume
 
     /**
      * Internal implementation. Most of the functions herein are delegated to it.
+     * 通过委托的形式交给实际的实现类
      */
     protected final transient DefaultMQPushConsumerImpl defaultMQPushConsumerImpl;
 
@@ -93,7 +95,7 @@ public class DefaultMQPushConsumer extends ClientConfig implements MQPushConsume
     private MessageModel messageModel = MessageModel.CLUSTERING;
 
     /**
-     * Consuming point on consumer booting.
+     * 生产者起始消费位置
      * </p>
      *
      * There are three consuming points:
@@ -139,32 +141,32 @@ public class DefaultMQPushConsumer extends ClientConfig implements MQPushConsume
     private AllocateMessageQueueStrategy allocateMessageQueueStrategy;
 
     /**
-     * Subscription relationship
+     * 订阅关系维护
      */
     private Map<String /* topic */, String /* sub expression */> subscription = new HashMap<String, String>();
 
     /**
-     * Message listener
+     * 消息监听器
      */
     private MessageListener messageListener;
 
     /**
-     * Offset Storage
+     * 偏移量存储
      */
     private OffsetStore offsetStore;
 
     /**
-     * Minimum consumer thread number
+     * 最小消费线程数
      */
     private int consumeThreadMin = 20;
 
     /**
-     * Max consumer thread number
+     * 最大消费线程数
      */
     private int consumeThreadMax = 20;
 
     /**
-     * Threshold for dynamic adjustment of the number of thread pool
+     * 动态调整线程数的阈值
      */
     private long adjustThreadPoolNumsThreshold = 100000;
 
@@ -174,7 +176,7 @@ public class DefaultMQPushConsumer extends ClientConfig implements MQPushConsume
     private int consumeConcurrentlyMaxSpan = 2000;
 
     /**
-     * Flow control threshold on queue level, each message queue will cache at most 1000 messages by default,
+     * 每个队列默认情况下会缓存1000条消息
      * Consider the {@code pullBatchSize}, the instantaneous value may exceed the limit
      */
     private int pullThresholdForQueue = 1000;
@@ -226,7 +228,7 @@ public class DefaultMQPushConsumer extends ClientConfig implements MQPushConsume
     private int pullBatchSize = 32;
 
     /**
-     * Whether update subscription relationship when every pull
+     * 更新订阅关系时是否需要每次都重试拉取
      */
     private boolean postSubscriptionWhenPull = false;
 

@@ -453,7 +453,7 @@ public class MappedFileQueue {
     }
 
     /**
-     * Finds a mapped file by offset.
+     * 通过偏移量找到映射的文件.
      *
      * @param offset Offset.
      * @param returnFirstOnNotFound If the mapped file is not found, then return the first one.

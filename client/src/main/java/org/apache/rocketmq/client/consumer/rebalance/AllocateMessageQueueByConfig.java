@@ -20,6 +20,9 @@ import java.util.List;
 import org.apache.rocketmq.client.consumer.AllocateMessageQueueStrategy;
 import org.apache.rocketmq.common.message.MessageQueue;
 
+/**
+ * 根据预先配置好的内容进行分配
+ */
 public class AllocateMessageQueueByConfig implements AllocateMessageQueueStrategy {
     private List<MessageQueue> messageQueueList;
 

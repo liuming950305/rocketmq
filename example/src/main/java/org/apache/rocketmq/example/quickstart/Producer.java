@@ -20,6 +20,7 @@ import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.apache.rocketmq.client.producer.SendResult;
 import org.apache.rocketmq.common.message.Message;
+import org.apache.rocketmq.common.topic.TopicValidator;
 import org.apache.rocketmq.remoting.common.RemotingHelper;
 
 /**
@@ -33,6 +34,8 @@ public class Producer {
          */
         DefaultMQProducer producer = new DefaultMQProducer("please_rename_unique_group_name");
 
+        // 设置NameServer地址
+        producer.setNamesrvAddr("localhost:9876");
         /*
          * Specify name server addresses.
          * <p/>
@@ -50,7 +53,7 @@ public class Producer {
          */
         producer.start();
 
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 1; i++) {
             try {
 
                 /*

@@ -35,7 +35,7 @@ import org.apache.rocketmq.remoting.RPCHook;
 import org.apache.rocketmq.remoting.exception.RemotingException;
 
 /**
- * Default pulling consumer.
+ * 默认的拉模型实现
  * This class will be removed in 2022, and a better implementation {@link DefaultLitePullConsumer} is recommend to use
  * in the scenario of actively pulling messages.
  */
@@ -49,7 +49,7 @@ public class DefaultMQPullConsumer extends ClientConfig implements MQPullConsume
      */
     private String consumerGroup;
     /**
-     * Long polling mode, the Consumer connection max suspend time, it is not recommended to modify
+     * 长连接拉的时候，消费者连接最长的挂起时间，不建议修改
      */
     private long brokerSuspendMaxTimeMillis = 1000 * 20;
     /**

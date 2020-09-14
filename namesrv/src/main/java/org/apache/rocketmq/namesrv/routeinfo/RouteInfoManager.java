@@ -45,14 +45,33 @@ import org.apache.rocketmq.common.protocol.route.TopicRouteData;
 import org.apache.rocketmq.common.sysflag.TopicSysFlag;
 import org.apache.rocketmq.remoting.common.RemotingUtil;
 
+/**
+ * 路由信息管理
+ */
 public class RouteInfoManager {
     private static final InternalLogger log = InternalLoggerFactory.getLogger(LoggerName.NAMESRV_LOGGER_NAME);
     private final static long BROKER_CHANNEL_EXPIRED_TIME = 1000 * 60 * 2;
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
+
+    /**
+     * Topic路由表, 发送到哪个队列中去
+     */
     private final HashMap<String/* topic */, List<QueueData>> topicQueueTable;
+    /**
+     * Broker 地址信息路由表
+     */
     private final HashMap<String/* brokerName */, BrokerData> brokerAddrTable;
+    /**
+     * 集群地址路由表
+     */
     private final HashMap<String/* clusterName */, Set<String/* brokerName */>> clusterAddrTable;
+    /**
+     * Broker 存活路由表
+     */
     private final HashMap<String/* brokerAddr */, BrokerLiveInfo> brokerLiveTable;
+    /**
+     * 过滤路由表信息
+     */
     private final HashMap<String/* brokerAddr */, List<String>/* Filter Server */> filterServerTable;
 
     public RouteInfoManager() {
@@ -73,6 +92,7 @@ public class RouteInfoManager {
     public void deleteTopic(final String topic) {
         try {
             try {
+                // 使用读写锁锁住进行操作
                 this.lock.writeLock().lockInterruptibly();
                 this.topicQueueTable.remove(topic);
             } finally {
@@ -156,6 +176,7 @@ public class RouteInfoManager {
                     }
                 }
 
+                // 将注册上来的Broker标记为Live
                 BrokerLiveInfo prevBrokerLiveInfo = this.brokerLiveTable.put(brokerAddr,
                     new BrokerLiveInfo(
                         System.currentTimeMillis(),
@@ -474,6 +495,7 @@ public class RouteInfoManager {
             try {
                 try {
                     this.lock.writeLock().lockInterruptibly();
+                    // 在存活的broker路由表中移除
                     this.brokerLiveTable.remove(brokerAddrFound);
                     this.filterServerTable.remove(brokerAddrFound);
                     String brokerNameFound = null;
@@ -497,6 +519,7 @@ public class RouteInfoManager {
                             }
                         }
 
+                        // 如果完全没有Broker存活了. 直接把Broker路由表也删除
                         if (brokerData.getBrokerAddrs().isEmpty()) {
                             removeBrokerName = true;
                             itBrokerAddrTable.remove();
@@ -545,6 +568,7 @@ public class RouteInfoManager {
                                 }
                             }
 
+                            // 一个Topic如果没有队列连接了. Topic队列也可以不维护了
                             if (queueDataList.isEmpty()) {
                                 itTopicQueueTable.remove();
                                 log.info("remove topic[{}] all queue, from topicQueueTable, because channel destroyed",
@@ -752,10 +776,23 @@ public class RouteInfoManager {
     }
 }
 
+/**
+ * Broker存活信息
+ */
 class BrokerLiveInfo {
+    /**
+     * 上次更新的时间戳
+     */
     private long lastUpdateTimestamp;
+    /**
+     * 版本
+     */
     private DataVersion dataVersion;
+
     private Channel channel;
+    /**
+     * 服务器地址
+     */
     private String haServerAddr;
 
     public BrokerLiveInfo(long lastUpdateTimestamp, DataVersion dataVersion, Channel channel,

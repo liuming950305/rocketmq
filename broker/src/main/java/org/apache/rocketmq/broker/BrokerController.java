@@ -850,10 +850,16 @@ public class BrokerController {
 
     public void start() throws Exception {
         if (this.messageStore != null) {
+            /**
+             * 启动消息存储服务
+             */
             this.messageStore.start();
         }
 
         if (this.remotingServer != null) {
+            /**
+             * 启动Netty Server用来接收/处理请求
+             */
             this.remotingServer.start();
         }
 
@@ -862,10 +868,17 @@ public class BrokerController {
         }
 
         if (this.fileWatchService != null) {
+            /**
+             * 启动文件监控服务
+             */
             this.fileWatchService.start();
         }
 
         if (this.brokerOuterAPI != null) {
+            /**
+             * 对外提供的Broker API
+             * 注册Broker，下线等API
+             */
             this.brokerOuterAPI.start();
         }
 

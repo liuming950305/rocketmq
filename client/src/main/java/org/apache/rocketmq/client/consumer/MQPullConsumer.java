@@ -24,7 +24,10 @@ import org.apache.rocketmq.common.message.MessageQueue;
 import org.apache.rocketmq.remoting.exception.RemotingException;
 
 /**
- * Pulling consumer interface
+ *  拉模式消费数据
+ *  1. 开始消费
+ * 2. 订阅Topic
+ * 3. 取消订阅Topic
  */
 public interface MQPullConsumer extends MQConsumer {
     /**

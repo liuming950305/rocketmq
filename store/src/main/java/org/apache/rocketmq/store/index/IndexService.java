@@ -36,7 +36,7 @@ import org.apache.rocketmq.store.config.StorePathConfigHelper;
 public class IndexService {
     private static final InternalLogger log = InternalLoggerFactory.getLogger(LoggerName.STORE_LOGGER_NAME);
     /**
-     * Maximum times to attempt index file creation.
+     * 尝试创建文件的最大次数
      */
     private static final int MAX_TRY_IDX_CREATE = 3;
     private final DefaultMessageStore defaultMessageStore;
